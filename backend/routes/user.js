@@ -1,5 +1,6 @@
 import express from "express";
-import { signUpSchema } from "../zodSchamas/userSchema";
+
+import { signup } from "../controller/user.controller.js";
 
 export const userRouter = express.Router();
 
@@ -10,9 +11,10 @@ userRouter.get("/", (req, res) => {
   });
 });
 
-//signup and signin router
-userRouter.post("/signup", (req, res) => {
-  //   const { username, firstName, lastName, password } = req.body;
-
-  const { success } = signUpSchema.safeParse(req.body);
-});
+/**
+ * signup
+ * first we check all the input is valid
+ * then we check if user already exists
+ * after that we will create a new user
+ */
+userRouter.post("/signup", signup);
