@@ -1,6 +1,6 @@
 import express from "express";
 
-import { signup } from "../controller/user.controller.js";
+import { signin, signup } from "../controller/user.controller.js";
 
 export const userRouter = express.Router();
 
@@ -18,3 +18,4 @@ userRouter.get("/", (req, res) => {
  * after that we will create a new user
  */
 userRouter.post("/signup", signup);
+userRouter.post("/signin", signin);
