@@ -1,5 +1,9 @@
 import { User } from "../schema/UserSchema.js";
-import { signinSchema, signUpSchema } from "../zodSchemas/userSchema.js";
+import {
+  signinSchema,
+  signUpSchema,
+  updateSchema,
+} from "../zodSchemas/userSchema.js";
 import jwt from "jsonwebtoken";
 export const signup = async (req, res) => {
   const { username, firstName, lastName, password } = req.body;
@@ -44,9 +48,7 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
   const { username, password } = req.body;
 
-  console.log("done1");
   const { success } = signinSchema.safeParse(req.body);
-  console.log("done2");
 
   if (!success) {
     return res.status(411).json({
@@ -59,15 +61,13 @@ export const signin = async (req, res) => {
     username: username,
     password: password,
   });
-  console.log("done3");
 
   if (!user) {
     return res.status(411).json({
       success: false,
-      message: "something went wring, please check your credentials",
+      message: "something went wrong, please check your credentials",
     });
   }
-  console.log("done4");
 
   const userId = user._id;
   if (user) {
@@ -82,4 +82,24 @@ export const signin = async (req, res) => {
   }
 
   return res.json({ message: "Something went wrong" }).status(411);
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { success } = updateSchema.safeParse(req.body);
+    if (!success) {
+      return res
+        .json({
+          message: "Error while updating information",
+        })
+        .status(403);
+    }
+
+    await User.updateOne({ _id: req.userId }, req.body);
+    return res.status(200).json({
+      message: "Details has been updated",
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
