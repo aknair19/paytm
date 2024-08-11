@@ -1,5 +1,10 @@
 import express from "express";
-import { signin, signup, updateUser } from "../controller/user.controller.js";
+import {
+  getUsers,
+  signin,
+  signup,
+  updateUser,
+} from "../controller/user.controller.js";
 import { authmiddleware } from "../middleware/index.js";
 
 export const userRouter = express.Router();
@@ -20,3 +25,4 @@ userRouter.get("/", (req, res) => {
 userRouter.post("/signup", signup);
 userRouter.post("/signin", signin);
 userRouter.put("/update", authmiddleware, updateUser);
+userRouter.get("/bulk", authmiddleware, getUsers);

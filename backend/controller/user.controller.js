@@ -103,3 +103,44 @@ export const updateUser = async (req, res) => {
     console.log(error);
   }
 };
+
+//get users where the firstname or lastname like given in the query
+export const getUsers = async (req, res) => {
+  try {
+    if (!req.query.filter) {
+      res
+        .json({
+          message: "No filter provided",
+        })
+        .status(403);
+    }
+    const filter = req.query.filter || "";
+    const users = await User.find({
+      $or: [
+        {
+          firstName: {
+            $regex: filter,
+          },
+        },
+        {
+          lastName: {
+            $regex: filter,
+          },
+        },
+      ],
+    });
+    console.log(users);
+    return res
+      .json(
+        users.map((user) => ({
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user._id,
+        }))
+      )
+      .status(200);
+  } catch (error) {
+    console.log(error, 123);
+  }
+};
